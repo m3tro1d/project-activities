@@ -6,3 +6,6 @@ project(sfml-lab-1)
 
 # Подкаталог 00 содержит ещё один CMakeLists.txt
 add_subdirectory(00)
+add_subdirectory(01)
+add_subdirectory(02)
+add_subdirectory(sfml1.1)
