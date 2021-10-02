@@ -4,18 +4,20 @@
 
 int main()
 {
-  sf::RenderWindow window(
-    sf::VideoMode({ 800, 600 }),
-    "Initials",
-    sf::Style::Default,
-    sf::ContextSettings(0, 0, 8)
-  );
+    sf::RenderWindow window(
+        sf::VideoMode({ 800, 600 }),
+        "Initials",
+        sf::Style::Default,
+        sf::ContextSettings(0, 0, 8)
+    );
 
-  window.clear();
+    window.clear();
 
-  // TODO
+    // TODO
 
-  window.display();
+    window.display();
 
-  sf::sleep(sf::seconds(5));
+    sf::sleep(sf::seconds(5));
 }
+
+// vim: set sw=4
