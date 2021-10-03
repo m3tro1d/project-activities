@@ -8,8 +8,7 @@ int main()
         sf::VideoMode({ 240, 680 }),
         "Traffic light",
         sf::Style::Default,
-        sf::ContextSettings(0, 0, 8)
-    );
+        sf::ContextSettings(0, 0, 8));
 
     window.clear(sf::Color(0x43, 0x43, 0x43));
 

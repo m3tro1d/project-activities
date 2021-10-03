@@ -8,8 +8,7 @@ int main()
         sf::VideoMode({ 800, 600 }),
         "Initials",
         sf::Style::Default,
-        sf::ContextSettings(0, 0, 8)
-    );
+        sf::ContextSettings(0, 0, 8));
 
     window.clear();
 
