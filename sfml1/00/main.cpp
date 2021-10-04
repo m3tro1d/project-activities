@@ -8,5 +8,3 @@ int main()
     std::cin >> a >> b;
     std::cout << "sum: " << (a + b) << std::endl;
 }
-
-// vim: set sw=4

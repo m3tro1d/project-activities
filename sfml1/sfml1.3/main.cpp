@@ -20,11 +20,9 @@ int main()
     const sf::Color pipeColor = sf::Color(0x3B, 0x38, 0x38);
     const sf::Color smokeColor = sf::Color(0xBF, 0xBF, 0xBF);
 
-    // TODO #bfbfbf
+    // TODO
 
     window.display();
 
     sf::sleep(sf::seconds(5));
 }
-
-// vim: set sw=4

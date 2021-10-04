@@ -6,5 +6,3 @@ int main()
     std::scanf("%d %d %d", &a, &b, &c);
     std::printf("%d\n", a + b + c);
 }
-
-// vim: set sw=4

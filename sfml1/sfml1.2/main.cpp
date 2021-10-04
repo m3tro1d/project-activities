@@ -103,5 +103,3 @@ int main()
 
     sf::sleep(sf::seconds(5));
 }
-
-// vim: set sw=4
