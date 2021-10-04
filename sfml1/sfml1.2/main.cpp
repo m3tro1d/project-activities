@@ -101,7 +101,7 @@ int main()
     }
     window.display();
 
-    sf::sleep(sf::seconds(2));
+    sf::sleep(sf::seconds(5));
 }
 
 // vim: set sw=4
