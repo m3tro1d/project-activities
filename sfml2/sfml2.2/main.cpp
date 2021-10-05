@@ -5,15 +5,19 @@
 int main()
 {
     constexpr int pointCount = 200;
+    const sf::Vector2f origin = { 400, 320 };
+    constexpr float movementRadius = 50.f;
+    constexpr int movementCount = 5;
 
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
     sf::RenderWindow window(
         sf::VideoMode({ 800, 600 }), "Ellipse",
         sf::Style::Default, settings);
+    sf::Clock clock;
 
     sf::ConvexShape shape;
-    shape.setPosition({ 400, 320 });
+    shape.setPosition({ origin.x + movementRadius, origin.y });
     shape.setFillColor(sf::Color(0xFF, 0x09, 0x80));
 
     shape.setPointCount(pointCount);
@@ -28,6 +32,9 @@ int main()
         shape.setPoint(pointNo, point);
     }
 
+    float currentAngle = 0;
+    const float deltaAngle = float(2 * M_PI) / float(movementCount);
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -39,7 +46,13 @@ int main()
             }
         }
 
-        // TODO: move the shape on the circle
+        const float dt = clock.restart().asSeconds();
+        currentAngle += deltaAngle * dt;
+        const sf::Vector2f newPosition = sf::Vector2f{
+            origin.x + movementRadius * std::cos(currentAngle),
+            origin.y + movementRadius * std::sin(currentAngle)
+        };
+        shape.setPosition(newPosition);
 
         window.clear();
         window.draw(shape);
