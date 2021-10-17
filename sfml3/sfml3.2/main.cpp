@@ -51,7 +51,6 @@ void initEyePupil(sf::ConvexShape& pupil)
 
 void initEyes(Eyes& eyes)
 {
-    constexpr float pupilsOffset = 10.f;
     eyes.position = { 400, 300 };
 
     initEyeEllipse(eyes.leftEye);
@@ -63,6 +62,35 @@ void initEyes(Eyes& eyes)
     eyes.leftPupil.setPosition(eyes.position.x - 90, eyes.position.y);
     initEyePupil(eyes.rightPupil);
     eyes.rightPupil.setPosition(eyes.position.x + 90, eyes.position.y);
+}
+
+sf::Vector2f toEuclidean(float radius, float angle)
+{
+    return {
+        radius * std::cos(angle),
+        radius * std::sin(angle)
+    };
+}
+
+float toDegrees(float radians)
+{
+    return float(double(radians) * 180.0 / M_PI);
+}
+
+void updateEyes(Eyes& eyes)
+{
+    const sf::Vector2f leftPupilOffset = toEuclidean(20, eyes.leftPupilRotation);
+    const sf::Vector2f rightPupilOffset = toEuclidean(20, eyes.rightPupilRotation);
+
+    eyes.leftPupil.setPosition(
+        eyes.position.x - 90 + leftPupilOffset.x,
+        eyes.position.y + leftPupilOffset.y);
+    eyes.leftPupil.setRotation(toDegrees(eyes.leftPupilRotation));
+
+    eyes.rightPupil.setPosition(
+        eyes.position.x + 90 + rightPupilOffset.x,
+        eyes.position.y + rightPupilOffset.y);
+    eyes.rightPupil.setRotation(toDegrees(eyes.rightPupilRotation));
 }
 
 void onMouseMove(const sf::Event::MouseMoveEvent& event, sf::Vector2f& mousePosition)
@@ -93,6 +121,13 @@ void pollEvents(sf::RenderWindow& window, sf::Vector2f& mousePosition)
 
 void update(sf::Vector2f& mousePosition, Eyes& eyes)
 {
+    const sf::Vector2f leftDelta = mousePosition - eyes.leftPupil.getPosition();
+    const sf::Vector2f rightDelta = mousePosition - eyes.rightPupil.getPosition();
+
+    eyes.leftPupilRotation = std::atan2(leftDelta.y, leftDelta.x);
+    eyes.rightPupilRotation = std::atan2(rightDelta.y, rightDelta.x);
+
+    updateEyes(eyes);
 }
 
 void redrawFrame(sf::RenderWindow& window, Eyes& eyes)
