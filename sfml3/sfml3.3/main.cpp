@@ -2,6 +2,8 @@
 #include <cmath>
 #include <iostream>
 
+constexpr int baseOffset = 20;
+
 struct Eyes
 {
     sf::ConvexShape leftEye;
@@ -13,6 +15,8 @@ struct Eyes
 
     float leftPupilRotation = 0;
     float rightPupilRotation = 0;
+    int leftPupilOffset = baseOffset;
+    int rightPupilOffset = baseOffset;
 };
 
 void initEyeEllipse(sf::ConvexShape& eye)
@@ -77,10 +81,15 @@ float toDegrees(float radians)
     return float(double(radians) * 180.0 / M_PI);
 }
 
+float norm(const sf::Vector2f& vec)
+{
+    return std::sqrt(vec.x * vec.x + vec.y * vec.y);
+}
+
 void updateEyes(Eyes& eyes)
 {
-    const sf::Vector2f leftPupilOffset = toEuclidean(20, eyes.leftPupilRotation);
-    const sf::Vector2f rightPupilOffset = toEuclidean(20, eyes.rightPupilRotation);
+    const sf::Vector2f leftPupilOffset = toEuclidean(eyes.leftPupilOffset, eyes.leftPupilRotation);
+    const sf::Vector2f rightPupilOffset = toEuclidean(eyes.rightPupilOffset, eyes.rightPupilRotation);
 
     eyes.leftPupil.setPosition(
         eyes.position.x - 90 + leftPupilOffset.x,
@@ -121,11 +130,32 @@ void pollEvents(sf::RenderWindow& window, sf::Vector2f& mousePosition)
 
 void update(sf::Vector2f& mousePosition, Eyes& eyes)
 {
-    const sf::Vector2f leftDelta = mousePosition - eyes.leftPupil.getPosition();
-    const sf::Vector2f rightDelta = mousePosition - eyes.rightPupil.getPosition();
+    const sf::Vector2f leftDelta = mousePosition - sf::Vector2f{ eyes.position.x - 90, eyes.position.y };
+    const sf::Vector2f rightDelta = mousePosition - sf::Vector2f{ eyes.position.x + 90, eyes.position.y };
 
     eyes.leftPupilRotation = std::atan2(leftDelta.y, leftDelta.x);
     eyes.rightPupilRotation = std::atan2(rightDelta.y, rightDelta.x);
+
+    const float leftNorm = norm(leftDelta);
+    const float rightNorm = norm(rightDelta);
+
+    if (leftNorm < baseOffset)
+    {
+        eyes.leftPupilOffset = leftNorm;
+    }
+    else
+    {
+        eyes.leftPupilOffset = baseOffset;
+    }
+
+    if (rightNorm < baseOffset)
+    {
+        eyes.rightPupilOffset = rightNorm;
+    }
+    else
+    {
+        eyes.rightPupilOffset = baseOffset;
+    }
 
     updateEyes(eyes);
 }
