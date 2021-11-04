@@ -1,6 +1,11 @@
+# Executables
 *.exe
 
+# Settings
+.idea/
+
 # CMake files
+.cmake
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles
@@ -12,3 +17,4 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
+*.cbp
