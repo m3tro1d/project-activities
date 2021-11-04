@@ -22,7 +22,7 @@ const float ARROW_OUTLINE_THICKNESS = 2.f;
 // === Function declarations ===
 
 void initArrow(sf::ConvexShape& arrow);
-void pollEvents(sf::RenderWindow& window, sf::Vector2f& mousePosition);
+void pollEvents(sf::RenderWindow& window);
 void redrawFrame(sf::RenderWindow& window, sf::ConvexShape& arrow);
 
 // === Main program ===
@@ -42,7 +42,7 @@ int main()
     initArrow(arrow);
     while (window.isOpen())
     {
-        pollEvents(window, <#initializer #>);
+        pollEvents(window);
         redrawFrame(window, arrow);
     }
 }
@@ -67,7 +67,7 @@ void initArrow(sf::ConvexShape& arrow)
     arrow.setRotation(ARROW_ROTATION);
 }
 
-void pollEvents(sf::RenderWindow& window, sf::Vector2f& mousePosition)
+void pollEvents(sf::RenderWindow& window)
 {
     sf::Event event{};
     while (window.pollEvent(event))
