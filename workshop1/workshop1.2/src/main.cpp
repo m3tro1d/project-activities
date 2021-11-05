@@ -48,6 +48,8 @@ void redrawFrame(sf::RenderWindow& window, Arrow& arrow);
 
 // Updating
 void update(Arrow& arrow, sf::Clock& clock, const sf::Vector2f& mousePosition);
+sf::Vector2f calculatePosition(const sf::Vector2f& currentPosition, const sf::Vector2<float>& direction, float dt);
+float calculateRotation(float currentRotation, const sf::Vector2<float>& direction, float dt);
 
 // === Main program ===
 
@@ -133,43 +135,51 @@ void update(Arrow& arrow, sf::Clock& clock, const sf::Vector2f& mousePosition)
     auto position = arrow.shape.getPosition();
     auto rotation = arrow.shape.getRotation();
     const auto dt = clock.restart().asSeconds();
-    const auto delta = mousePosition - position;
+    const auto direction = mousePosition - position;
 
-    // Motion
-    const auto direction = normVector(delta);
-    position += ARROW_MAX_SPEED * direction * dt;
+    const auto newPosition = calculatePosition(position, direction, dt);
+    const auto newRotation = calculateRotation(rotation, direction, dt);
 
-    // Rotation
-    auto angle = toDegrees(std::atan2(delta.y, delta.x));
-    if (angle < 0)
+    arrow.shape.setPosition(newPosition);
+    arrow.shape.setRotation(newRotation);
+}
+
+sf::Vector2f calculatePosition(const sf::Vector2f& currentPosition, const sf::Vector2<float>& direction, const float dt)
+{
+    const auto normalizedDirection = normalized(direction);
+    const auto newPosition = currentPosition + ARROW_MAX_SPEED * normalizedDirection * dt;
+
+    return newPosition;
+}
+
+float calculateRotation(const float currentRotation, const sf::Vector2<float>& direction, const float dt)
+{
+    const auto directionRotation = positiveAngle(toDegrees(std::atan2(direction.y, direction.x)));
+    const auto deltaRotation = directionRotation - currentRotation;
+
+    float newRotation;
+    if (std::abs(deltaRotation) > 360 - std::abs(deltaRotation))
     {
-        angle += 360;
-    }
-
-    const auto angleDiff = angle - rotation;
-    if (std::abs(angleDiff) > 360 - std::abs(angleDiff))
-    {
-        if (angleDiff > 0)
+        if (deltaRotation > 0)
         {
-            rotation -= ARROW_MAX_ANGLE_SPEED * dt;
+            newRotation = currentRotation - ARROW_MAX_ANGLE_SPEED * dt;
         }
         else
         {
-            rotation += ARROW_MAX_ANGLE_SPEED * dt;
+            newRotation = currentRotation + ARROW_MAX_ANGLE_SPEED * dt;
         }
     }
     else
     {
-        if (angleDiff > 0)
+        if (deltaRotation > 0)
         {
-            rotation += ARROW_MAX_ANGLE_SPEED * dt;
+            newRotation = currentRotation + ARROW_MAX_ANGLE_SPEED * dt;
         }
         else
         {
-            rotation -= ARROW_MAX_ANGLE_SPEED * dt;
+            newRotation = currentRotation - ARROW_MAX_ANGLE_SPEED * dt;
         }
     }
 
-    arrow.shape.setPosition(position);
-    arrow.shape.setRotation(rotation);
+    return newRotation;
 }

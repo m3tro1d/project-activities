@@ -5,4 +5,7 @@
 #include <iostream>
 
 float toDegrees(float radians);
-sf::Vector2f normVector(const sf::Vector2f& vec);
+float positiveAngle(float angle);
+
+float norm(const sf::Vector2f& vec);
+sf::Vector2f normalized(const sf::Vector2f& vec);
