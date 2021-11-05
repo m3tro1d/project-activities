@@ -32,8 +32,6 @@ constexpr float ARROW_MAX_ANGLE_SPEED = 90.f;
 struct Arrow
 {
     sf::ConvexShape shape;
-    sf::Vector2f position; // Current position
-    float rotation = 0; // Current rotation, in radians
 };
 
 // === Function declarations ===
@@ -50,7 +48,6 @@ void redrawFrame(sf::RenderWindow& window, Arrow& arrow);
 
 // Updating
 void update(Arrow& arrow, sf::Clock& clock, const sf::Vector2f& mousePosition);
-void updateArrow(Arrow& arrow);
 
 // === Main program ===
 
@@ -95,8 +92,7 @@ void initArrow(Arrow& arrow)
     arrow.shape.setOutlineColor(ARROW_OUTLINE_COLOR);
     arrow.shape.setOutlineThickness(ARROW_OUTLINE_THICKNESS);
 
-    arrow.position = { ARROW_INITIAL_X, ARROW_INITIAL_Y };
-    updateArrow(arrow);
+    arrow.shape.setPosition(ARROW_INITIAL_X, ARROW_INITIAL_Y);
 }
 
 void pollEvents(sf::RenderWindow& window, sf::Vector2f& mousePosition)
@@ -134,21 +130,46 @@ void onMouseMove(const sf::Event::MouseMoveEvent& event, sf::Vector2f& mousePosi
 
 void update(Arrow& arrow, sf::Clock& clock, const sf::Vector2f& mousePosition)
 {
-    const auto delta = mousePosition - arrow.position;
+    auto position = arrow.shape.getPosition();
+    auto rotation = arrow.shape.getRotation();
     const auto dt = clock.restart().asSeconds();
+    const auto delta = mousePosition - position;
 
     // Motion
     const auto direction = normVector(delta);
-    arrow.position += ARROW_MAX_SPEED * direction * dt;
+    position += ARROW_MAX_SPEED * direction * dt;
 
     // Rotation
-    arrow.rotation = std::atan2(delta.y, delta.x);
+    auto angle = toDegrees(std::atan2(delta.y, delta.x));
+    if (angle < 0)
+    {
+        angle += 360;
+    }
 
-    updateArrow(arrow);
-}
+    const auto angleDiff = angle - rotation;
+    if (std::abs(angleDiff) > 360 - std::abs(angleDiff))
+    {
+        if (angleDiff > 0)
+        {
+            rotation -= ARROW_MAX_ANGLE_SPEED * dt;
+        }
+        else
+        {
+            rotation += ARROW_MAX_ANGLE_SPEED * dt;
+        }
+    }
+    else
+    {
+        if (angleDiff > 0)
+        {
+            rotation += ARROW_MAX_ANGLE_SPEED * dt;
+        }
+        else
+        {
+            rotation -= ARROW_MAX_ANGLE_SPEED * dt;
+        }
+    }
 
-void updateArrow(Arrow& arrow)
-{
-    arrow.shape.setPosition(arrow.position);
-    arrow.shape.setRotation(toDegrees(arrow.rotation) + ARROW_ANGLE_OFFSET);
+    arrow.shape.setPosition(position);
+    arrow.shape.setRotation(rotation);
 }
