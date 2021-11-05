@@ -12,10 +12,11 @@ constexpr uint WINDOW_HEIGHT = 600;
 
 const sf::Color WINDOW_BACKGROUND_COLOR = sf::Color(0xFF, 0xFF, 0xFF);
 
+constexpr uint WINDOW_ANTIALIASING_LEVEL = 8;
+
 // Arrow
 constexpr uint ARROW_INITIAL_X = WINDOW_WIDTH / 2;
 constexpr uint ARROW_INITIAL_Y = WINDOW_HEIGHT / 2;
-constexpr uint ARROW_ANGLE_OFFSET = 90;
 
 constexpr float ARROW_BASE_WIDTH = 50.f;
 constexpr float ARROW_BASE_HEIGHT = 50.f;
@@ -27,27 +28,20 @@ const float ARROW_OUTLINE_THICKNESS = 2.f;
 constexpr float ARROW_MAX_SPEED = 20.f;
 constexpr float ARROW_MAX_ANGLE_SPEED = 90.f;
 
-// === Data structures ===
-
-struct Arrow
-{
-    sf::ConvexShape shape;
-};
-
 // === Function declarations ===
 
 // Initialization
-void initArrow(Arrow& arrow);
+void initArrow(sf::ConvexShape& arrow);
 
 // Events handling
 void pollEvents(sf::RenderWindow& window, sf::Vector2f& mousePosition);
 void onMouseMove(const sf::Event::MouseMoveEvent& event, sf::Vector2f& mousePosition);
 
 // Rendering
-void redrawFrame(sf::RenderWindow& window, Arrow& arrow);
+void redrawFrame(sf::RenderWindow& window, sf::ConvexShape& arrow);
 
 // Updating
-void update(Arrow& arrow, sf::Clock& clock, const sf::Vector2f& mousePosition);
+void update(sf::ConvexShape& arrow, sf::Clock& clock, const sf::Vector2f& mousePosition);
 sf::Vector2f calculatePosition(const sf::Vector2f& currentPosition, const sf::Vector2<float>& direction, float dt);
 float calculateRotation(float currentRotation, const sf::Vector2<float>& direction, float dt);
 
@@ -56,7 +50,7 @@ float calculateRotation(float currentRotation, const sf::Vector2<float>& directi
 int main()
 {
     sf::ContextSettings settings;
-    settings.antialiasingLevel = 8;
+    settings.antialiasingLevel = WINDOW_ANTIALIASING_LEVEL;
     sf::RenderWindow window(
         sf::VideoMode({ WINDOW_WIDTH, WINDOW_HEIGHT }),
         "Moving Arrow",
@@ -65,7 +59,7 @@ int main()
 
     sf::Clock clock;
 
-    Arrow arrow;
+    sf::ConvexShape arrow;
     sf::Vector2f mousePosition;
 
     initArrow(arrow);
@@ -79,22 +73,22 @@ int main()
 
 // === Function definitions ===
 
-void initArrow(Arrow& arrow)
+void initArrow(sf::ConvexShape& arrow)
 {
-    arrow.shape.setPointCount(7);
-    arrow.shape.setPoint(0, { -ARROW_BASE_HEIGHT, ARROW_BASE_WIDTH / 2 });
-    arrow.shape.setPoint(1, { -ARROW_BASE_HEIGHT, -(ARROW_BASE_WIDTH / 2) });
-    arrow.shape.setPoint(2, { 0, -(ARROW_BASE_WIDTH / 2) });
-    arrow.shape.setPoint(3, { 0, -ARROW_BASE_WIDTH });
-    arrow.shape.setPoint(4, { ARROW_BASE_HEIGHT, 0 });
-    arrow.shape.setPoint(5, { 0, ARROW_BASE_WIDTH });
-    arrow.shape.setPoint(6, { 0, ARROW_BASE_WIDTH / 2 });
+    arrow.setPointCount(7);
+    arrow.setPoint(0, { -ARROW_BASE_HEIGHT, ARROW_BASE_WIDTH / 2 });
+    arrow.setPoint(1, { -ARROW_BASE_HEIGHT, -(ARROW_BASE_WIDTH / 2) });
+    arrow.setPoint(2, { 0, -(ARROW_BASE_WIDTH / 2) });
+    arrow.setPoint(3, { 0, -ARROW_BASE_WIDTH });
+    arrow.setPoint(4, { ARROW_BASE_HEIGHT, 0 });
+    arrow.setPoint(5, { 0, ARROW_BASE_WIDTH });
+    arrow.setPoint(6, { 0, ARROW_BASE_WIDTH / 2 });
 
-    arrow.shape.setFillColor(ARROW_FILL_COLOR);
-    arrow.shape.setOutlineColor(ARROW_OUTLINE_COLOR);
-    arrow.shape.setOutlineThickness(ARROW_OUTLINE_THICKNESS);
+    arrow.setFillColor(ARROW_FILL_COLOR);
+    arrow.setOutlineColor(ARROW_OUTLINE_COLOR);
+    arrow.setOutlineThickness(ARROW_OUTLINE_THICKNESS);
 
-    arrow.shape.setPosition(ARROW_INITIAL_X, ARROW_INITIAL_Y);
+    arrow.setPosition(ARROW_INITIAL_X, ARROW_INITIAL_Y);
 }
 
 void pollEvents(sf::RenderWindow& window, sf::Vector2f& mousePosition)
@@ -116,32 +110,30 @@ void pollEvents(sf::RenderWindow& window, sf::Vector2f& mousePosition)
     }
 }
 
-void redrawFrame(sf::RenderWindow& window, Arrow& arrow)
+void redrawFrame(sf::RenderWindow& window, sf::ConvexShape& arrow)
 {
     window.clear(WINDOW_BACKGROUND_COLOR);
-    window.draw(arrow.shape);
+    window.draw(arrow);
     window.display();
 }
 
 void onMouseMove(const sf::Event::MouseMoveEvent& event, sf::Vector2f& mousePosition)
 {
-    std::cout << "mouse x=" << event.x << ", y=" << event.y << std::endl;
-
     mousePosition = { float(event.x), float(event.y) };
 }
 
-void update(Arrow& arrow, sf::Clock& clock, const sf::Vector2f& mousePosition)
+void update(sf::ConvexShape& arrow, sf::Clock& clock, const sf::Vector2f& mousePosition)
 {
-    auto position = arrow.shape.getPosition();
-    auto rotation = arrow.shape.getRotation();
+    auto position = arrow.getPosition();
+    auto rotation = arrow.getRotation();
     const auto dt = clock.restart().asSeconds();
     const auto direction = mousePosition - position;
 
     const auto newPosition = calculatePosition(position, direction, dt);
     const auto newRotation = calculateRotation(rotation, direction, dt);
 
-    arrow.shape.setPosition(newPosition);
-    arrow.shape.setRotation(newRotation);
+    arrow.setPosition(newPosition);
+    arrow.setRotation(newRotation);
 }
 
 sf::Vector2f calculatePosition(const sf::Vector2f& currentPosition, const sf::Vector2<float>& direction, const float dt)
