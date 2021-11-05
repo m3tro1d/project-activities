@@ -80,13 +80,13 @@ int main()
 void initArrow(Arrow& arrow)
 {
     arrow.shape.setPointCount(7);
-    arrow.shape.setPoint(0, { -(ARROW_BASE_WIDTH / 2), ARROW_BASE_HEIGHT });
-    arrow.shape.setPoint(1, { -(ARROW_BASE_WIDTH / 2), 0 });
-    arrow.shape.setPoint(2, { -ARROW_BASE_WIDTH, 0 });
-    arrow.shape.setPoint(3, { 0, -ARROW_BASE_HEIGHT });
-    arrow.shape.setPoint(4, { ARROW_BASE_WIDTH, 0 });
-    arrow.shape.setPoint(5, { ARROW_BASE_WIDTH / 2, 0 });
-    arrow.shape.setPoint(6, { ARROW_BASE_WIDTH / 2, ARROW_BASE_HEIGHT });
+    arrow.shape.setPoint(0, { -ARROW_BASE_HEIGHT, ARROW_BASE_WIDTH / 2 });
+    arrow.shape.setPoint(1, { -ARROW_BASE_HEIGHT, -(ARROW_BASE_WIDTH / 2) });
+    arrow.shape.setPoint(2, { 0, -(ARROW_BASE_WIDTH / 2) });
+    arrow.shape.setPoint(3, { 0, -ARROW_BASE_WIDTH });
+    arrow.shape.setPoint(4, { ARROW_BASE_HEIGHT, 0 });
+    arrow.shape.setPoint(5, { 0, ARROW_BASE_WIDTH });
+    arrow.shape.setPoint(6, { 0, ARROW_BASE_WIDTH / 2 });
 
     arrow.shape.setFillColor(ARROW_FILL_COLOR);
     arrow.shape.setOutlineColor(ARROW_OUTLINE_COLOR);
