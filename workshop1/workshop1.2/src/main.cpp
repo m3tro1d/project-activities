@@ -139,9 +139,12 @@ void update(sf::ConvexShape& arrow, sf::Clock& clock, const sf::Vector2f& mouseP
 sf::Vector2f calculatePosition(const sf::Vector2f& currentPosition, const sf::Vector2<float>& direction, const float dt)
 {
     const auto normalizedDirection = normalized(direction);
-    const auto newPosition = currentPosition + ARROW_MAX_SPEED * normalizedDirection * dt;
+    if (std::isnan(normalizedDirection.x) || std::isnan(normalizedDirection.y))
+    {
+        return currentPosition;
+    }
 
-    return newPosition;
+    return currentPosition + ARROW_MAX_SPEED * normalizedDirection * dt;
 }
 
 float calculateRotation(const float currentRotation, const sf::Vector2<float>& direction, const float dt)
