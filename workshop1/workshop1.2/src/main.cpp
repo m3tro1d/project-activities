@@ -49,7 +49,7 @@ void onMouseMove(const sf::Event::MouseMoveEvent& event, sf::Vector2f& mousePosi
 void redrawFrame(sf::RenderWindow& window, Arrow& arrow);
 
 // Updating
-void update(Arrow& arrow, const sf::Vector2f& mousePosition);
+void update(Arrow& arrow, sf::Clock& clock, const sf::Vector2f& mousePosition);
 void updateArrow(Arrow& arrow);
 
 // === Main program ===
@@ -64,6 +64,8 @@ int main()
         sf::Style::Default,
         settings);
 
+    sf::Clock clock;
+
     Arrow arrow;
     sf::Vector2f mousePosition;
 
@@ -71,7 +73,7 @@ int main()
     while (window.isOpen())
     {
         pollEvents(window, mousePosition);
-        update(arrow, mousePosition);
+        update(arrow, clock, mousePosition);
         redrawFrame(window, arrow);
     }
 }
@@ -130,10 +132,18 @@ void onMouseMove(const sf::Event::MouseMoveEvent& event, sf::Vector2f& mousePosi
     mousePosition = { float(event.x), float(event.y) };
 }
 
-void update(Arrow& arrow, const sf::Vector2f& mousePosition)
+void update(Arrow& arrow, sf::Clock& clock, const sf::Vector2f& mousePosition)
 {
-    const sf::Vector2f delta = mousePosition - arrow.position;
+    const auto delta = mousePosition - arrow.position;
+    const auto dt = clock.restart().asSeconds();
+
+    // Motion
+    const auto direction = normVector(delta);
+    arrow.position += ARROW_MAX_SPEED * direction * dt;
+
+    // Rotation
     arrow.rotation = std::atan2(delta.y, delta.x);
+
     updateArrow(arrow);
 }
 
