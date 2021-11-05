@@ -28,6 +28,9 @@ const float ARROW_OUTLINE_THICKNESS = 2.f;
 constexpr float ARROW_MAX_SPEED = 20.f;
 constexpr float ARROW_MAX_ANGLE_SPEED = 90.f;
 
+// General
+constexpr float MAX_ANGLE = 360.f;
+
 // === Function declarations ===
 
 // Initialization
@@ -153,7 +156,7 @@ float calculateRotation(const float currentRotation, const sf::Vector2<float>& d
     const auto deltaRotation = directionRotation - currentRotation;
 
     float newRotation;
-    if (std::abs(deltaRotation) > 360 - std::abs(deltaRotation))
+    if (std::abs(deltaRotation) > MAX_ANGLE - std::abs(deltaRotation))
     {
         if (deltaRotation > 0)
         {
