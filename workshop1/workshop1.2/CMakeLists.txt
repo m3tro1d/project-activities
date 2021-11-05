@@ -1,4 +1,7 @@
-add_executable(workshop1.2 main.cpp)
+add_executable(workshop1.2
+               src/main.cpp
+               src/utils.cpp)
+target_include_directories(workshop1.2 PRIVATE include)
 
 target_include_directories(workshop1.2 PRIVATE ${SFML_INCLUDE_DIR})
 target_compile_features(workshop1.2 PUBLIC cxx_std_17)
