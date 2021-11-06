@@ -7,4 +7,4 @@ target_compile_definitions(workshop1.4 PRIVATE SFML_STATIC)
 
 target_link_libraries(workshop1.4 ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 
-file(COPY cat.png DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
