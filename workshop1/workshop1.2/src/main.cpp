@@ -125,8 +125,8 @@ void onMouseMove(const sf::Event::MouseMoveEvent& event, sf::Vector2f& mousePosi
 
 void update(sf::ConvexShape& arrow, sf::Clock& clock, const sf::Vector2f& mousePosition)
 {
-    auto position = arrow.getPosition();
-    auto rotation = arrow.getRotation();
+    const auto position = arrow.getPosition();
+    const auto rotation = arrow.getRotation();
     const auto dt = clock.restart().asSeconds();
     const auto direction = mousePosition - position;
 
