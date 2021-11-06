@@ -1,15 +1,5 @@
 #include "utils.h"
 
-float toDegrees(float radians)
-{
-    return float(double(radians) * 180.0 / M_PI);
-}
-
-float positiveAngle(float angle)
-{
-    return angle < 0 ? angle + 360 : angle;
-}
-
 float norm(const sf::Vector2f& vec)
 {
     return std::sqrt(vec.x * vec.x + vec.y * vec.y);
@@ -19,15 +9,6 @@ sf::Vector2f normalized(const sf::Vector2f& vec)
 {
     return vec / norm(vec);
 }
-
-sf::Vector2f centerPosition(const sf::Vector2f& topLeftPosition, float width, float height)
-{
-    return {
-        topLeftPosition.x + width / 2,
-        topLeftPosition.y + height / 2,
-    };
-}
-
 sf::Vector2f topLeftPosition(const sf::Vector2f& centerPosition, float width, float height)
 {
     return {
