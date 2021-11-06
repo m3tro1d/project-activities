@@ -43,7 +43,7 @@ void onMousePressed(const sf::Event::MouseButtonEvent& event, sf::Vector2f& clic
 void redrawFrame(sf::RenderWindow& window, const sf::Sprite& cat, const sf::Sprite& pointer, bool clicked);
 
 // Updating
-void update(sf::Sprite& cat, sf::Sprite& pointer, sf::Clock& clock, const sf::Vector2f& clickPosition);
+void update(sf::Sprite& cat, sf::Sprite& pointer, sf::Clock& clock, const sf::Vector2f& clickPosition, bool clicked);
 sf::Vector2f calculatePointerPosition(const sf::Vector2f& clickPosition);
 sf::Vector2f calculateCatPosition(const sf::Vector2f& currentPosition, const sf::Vector2f& direction, float dt);
 
@@ -72,7 +72,7 @@ int main()
     while (window.isOpen())
     {
         pollEvents(window, clickPosition, clicked);
-        update(cat, pointer, clock, clickPosition);
+        update(cat, pointer, clock, clickPosition, clicked);
         redrawFrame(window, cat, pointer, clicked);
     }
 }
@@ -145,7 +145,7 @@ void redrawFrame(sf::RenderWindow& window, const sf::Sprite& cat, const sf::Spri
     window.display();
 }
 
-void update(sf::Sprite& cat, sf::Sprite& pointer, sf::Clock& clock, const sf::Vector2f& clickPosition)
+void update(sf::Sprite& cat, sf::Sprite& pointer, sf::Clock& clock, const sf::Vector2f& clickPosition, bool clicked)
 {
     const auto currentCatPosition = cat.getPosition();
     const auto dt = clock.restart().asSeconds();
@@ -154,7 +154,10 @@ void update(sf::Sprite& cat, sf::Sprite& pointer, sf::Clock& clock, const sf::Ve
     const auto newCatPosition = calculateCatPosition(currentCatPosition, catDirection, dt);
     const auto newPointerPosition = calculatePointerPosition(clickPosition);
 
-    cat.setPosition(newCatPosition);
+    if (clicked)
+    {
+        cat.setPosition(newCatPosition);
+    }
     pointer.setPosition(newPointerPosition);
 }
 
