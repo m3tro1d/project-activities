@@ -174,11 +174,5 @@ sf::Vector2f calculatePointerPosition(const sf::Vector2f& clickPosition)
 
 sf::Vector2f calculateCatPosition(const sf::Vector2f& currentPosition, const sf::Vector2f& direction, const float dt)
 {
-    const auto normalizedDirection = normalized(direction);
-    if (std::isnan(normalizedDirection.x) || std::isnan(normalizedDirection.y))
-    {
-        return currentPosition;
-    }
-
-    return currentPosition + CAT_SPEED * normalizedDirection * dt;
+    return calculateMovementPosition(currentPosition, direction, CAT_SPEED, dt);
 }

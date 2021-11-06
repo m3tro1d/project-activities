@@ -19,3 +19,17 @@ sf::Vector2f normalized(const sf::Vector2f& vec)
 {
     return vec / norm(vec);
 }
+
+sf::Vector2f calculateMovementPosition(const sf::Vector2f& currentPosition,
+    const sf::Vector2f& direction,
+    const float speed,
+    const float dt)
+{
+    const auto normalizedDirection = normalized(direction);
+    if (std::isnan(normalizedDirection.x) || std::isnan(normalizedDirection.y))
+    {
+        return currentPosition;
+    }
+
+    return currentPosition + speed * normalizedDirection * dt;
+}
