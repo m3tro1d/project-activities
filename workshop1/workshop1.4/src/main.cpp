@@ -147,18 +147,19 @@ void redrawFrame(sf::RenderWindow& window, const sf::Sprite& cat, const sf::Spri
 
 void update(sf::Sprite& cat, sf::Sprite& pointer, sf::Clock& clock, const sf::Vector2f& clickPosition, bool clicked)
 {
-    const auto currentCatPosition = cat.getPosition();
     const auto dt = clock.restart().asSeconds();
-    const auto catDirection = clickPosition - currentCatPosition;
 
-    const auto newCatPosition = calculateCatPosition(currentCatPosition, catDirection, dt);
     const auto newPointerPosition = calculatePointerPosition(clickPosition);
+    pointer.setPosition(newPointerPosition);
 
     if (clicked)
     {
+        const auto currentCatPosition = cat.getPosition();
+        const auto catDirection = newPointerPosition - currentCatPosition;
+
+        const auto newCatPosition = calculateCatPosition(currentCatPosition, catDirection, dt);
         cat.setPosition(newCatPosition);
     }
-    pointer.setPosition(newPointerPosition);
 }
 
 sf::Vector2f calculatePointerPosition(const sf::Vector2f& clickPosition)
