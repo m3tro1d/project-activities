@@ -1,5 +1,4 @@
-#include <SFML/Graphics.hpp>
-#include <iostream>
+#include "utils.h"
 
 // === Typedefs ===
 
@@ -16,13 +15,18 @@ const sf::Color WINDOW_BACKGROUND_COLOR = sf::Color(0xFF, 0xFF, 0xFF);
 // Cat
 constexpr uint CAT_SPRITE_WIDTH = 38;
 constexpr uint CAT_SPRITE_HEIGHT = 35;
+
 constexpr uint CAT_INITIAL_X = WINDOW_WIDTH / 2 - CAT_SPRITE_WIDTH;
 constexpr uint CAT_INITIAL_Y = WINDOW_HEIGHT / 2 - CAT_SPRITE_HEIGHT;
+
 const std::string CAT_TEXTURE_PATH = "assets/cat.png";
+
+constexpr float CAT_MAX_SPEED = 250;
 
 // Pointer
 constexpr uint POINTER_SPRITE_WIDTH = 32;
 constexpr uint POINTER_SPRITE_HEIGHT = 32;
+
 const std::string POINTER_TEXTURE_PATH = "assets/red_pointer.png";
 
 // === Function declarations ===
@@ -39,8 +43,9 @@ void onMousePressed(const sf::Event::MouseButtonEvent& event, sf::Vector2f& clic
 void redrawFrame(sf::RenderWindow& window, const sf::Sprite& cat, const sf::Sprite& pointer, bool clicked);
 
 // Updating
-void update(sf::Sprite& cat, sf::Sprite& pointer, const sf::Vector2f& clickPosition);
+void update(sf::Sprite& cat, sf::Sprite& pointer, sf::Clock& clock, const sf::Vector2f& clickPosition);
 sf::Vector2f calculatePointerPosition(const sf::Vector2f& clickPosition);
+sf::Vector2f calculateCatPosition(const sf::Vector2f& currentPosition, const sf::Vector2f& direction, float dt);
 
 // === Main program ===
 
@@ -54,6 +59,8 @@ int main()
         sf::Style::Default,
         settings);
 
+    sf::Clock clock;
+
     sf::Sprite cat;
     sf::Sprite pointer;
 
@@ -65,7 +72,7 @@ int main()
     while (window.isOpen())
     {
         pollEvents(window, clickPosition, clicked);
-        update(cat, pointer, clickPosition);
+        update(cat, pointer, clock, clickPosition);
         redrawFrame(window, cat, pointer, clicked);
     }
 }
@@ -138,15 +145,34 @@ void redrawFrame(sf::RenderWindow& window, const sf::Sprite& cat, const sf::Spri
     window.display();
 }
 
-void update(sf::Sprite& cat, sf::Sprite& pointer, const sf::Vector2f& clickPosition)
+void update(sf::Sprite& cat, sf::Sprite& pointer, sf::Clock& clock, const sf::Vector2f& clickPosition)
 {
-    pointer.setPosition(calculatePointerPosition(clickPosition));
+    const auto currentCatPosition = cat.getPosition();
+    const auto dt = clock.restart().asSeconds();
+    const auto catDirection = clickPosition - currentCatPosition;
+
+    const auto newCatPosition = calculateCatPosition(currentCatPosition, catDirection, dt);
+    const auto newPointerPosition = calculatePointerPosition(clickPosition);
+
+    cat.setPosition(newCatPosition);
+    pointer.setPosition(newPointerPosition);
 }
 
 sf::Vector2f calculatePointerPosition(const sf::Vector2f& clickPosition)
 {
     return {
-        clickPosition.x - POINTER_SPRITE_WIDTH / 2,
-        clickPosition.y - POINTER_SPRITE_HEIGHT / 2,
+        clickPosition.x - float(POINTER_SPRITE_WIDTH) / 2,
+        clickPosition.y - float(POINTER_SPRITE_HEIGHT) / 2,
     };
+}
+
+sf::Vector2f calculateCatPosition(const sf::Vector2f& currentPosition, const sf::Vector2f& direction, const float dt)
+{
+    const auto normalizedDirection = normalized(direction);
+    if (std::isnan(normalizedDirection.x) || std::isnan(normalizedDirection.y))
+    {
+        return currentPosition;
+    }
+
+    return currentPosition + CAT_MAX_SPEED * normalizedDirection * dt;
 }
