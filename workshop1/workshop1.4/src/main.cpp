@@ -21,13 +21,15 @@ constexpr uint CAT_INITIAL_Y = WINDOW_HEIGHT / 2 - CAT_SPRITE_HEIGHT;
 const std::string CAT_TEXTURE_PATH = "assets/cat.png";
 
 // Pointer
+constexpr uint POINTER_SPRITE_WIDTH = 38;
+constexpr uint POINTER_SPRITE_HEIGHT = 35;
 const std::string POINTER_TEXTURE_PATH = "assets/red_pointer.png";
 
 // === Function declarations ===
 
 // Initialization
-void initCat(sf::Sprite& cat, sf::Texture& catTexture);
-void initPointer(sf::Sprite& pointer, sf::Texture& pointerTexture);
+void initCat(sf::Sprite& cat);
+void initPointer(sf::Sprite& pointer);
 
 // Events handling
 void pollEvents(sf::RenderWindow& window, sf::Vector2f& clickPosition);
@@ -37,7 +39,8 @@ void onMousePressed(const sf::Event::MouseButtonEvent& event, sf::Vector2f& clic
 void redrawFrame(sf::RenderWindow& window, const sf::Sprite& cat, const sf::Sprite& pointer);
 
 // Updating
-void update(sf::Sprite& cat, const sf::Vector2f& clickPosition);
+void update(sf::Sprite& cat, sf::Sprite& pointer, const sf::Vector2f& clickPosition);
+sf::Vector2f calculatePointerPosition(const sf::Vector2f& clickPosition);
 
 // === Main program ===
 
@@ -51,45 +54,43 @@ int main()
         sf::Style::Default,
         settings);
 
-    sf::Texture catTexture;
     sf::Sprite cat;
-
-    sf::Texture pointerTexture;
     sf::Sprite pointer;
 
     sf::Vector2f clickPosition;
 
-    initCat(cat, catTexture);
-    initPointer(pointer, pointerTexture);
+    initCat(cat);
+    initPointer(pointer);
     while (window.isOpen())
     {
         pollEvents(window, clickPosition);
-        update(cat, clickPosition);
+        update(cat, pointer, clickPosition);
         redrawFrame(window, cat, pointer);
     }
 }
 
 // === Function definitions ===
 
-void initCat(sf::Sprite& cat, sf::Texture& catTexture)
+void initCat(sf::Sprite& cat)
 {
     cat.setPosition(CAT_INITIAL_X, CAT_INITIAL_Y);
 
-    if (!catTexture.loadFromFile(CAT_TEXTURE_PATH))
+    static sf::Texture texture;
+    if (!texture.loadFromFile(CAT_TEXTURE_PATH))
     {
         std::exit(1);
     }
-    cat.setTexture(catTexture);
+    cat.setTexture(texture);
 }
 
-void initPointer(sf::Sprite& pointer, sf::Texture& pointerTexture)
+void initPointer(sf::Sprite& pointer)
 {
-    std::cout << pointer.getPosition().x << std::endl;
-    if (!pointerTexture.loadFromFile(POINTER_TEXTURE_PATH))
+    static sf::Texture texture;
+    if (!texture.loadFromFile(POINTER_TEXTURE_PATH))
     {
         std::exit(1);
     }
-    pointer.setTexture(pointerTexture);
+    pointer.setTexture(texture);
 }
 
 void pollEvents(sf::RenderWindow& window, sf::Vector2f& clickPosition)
@@ -128,6 +129,15 @@ void redrawFrame(sf::RenderWindow& window, const sf::Sprite& cat, const sf::Spri
     window.display();
 }
 
-void update(sf::Sprite& cat, const sf::Vector2f& clickPosition)
+void update(sf::Sprite& cat, sf::Sprite& pointer, const sf::Vector2f& clickPosition)
 {
+    pointer.setPosition(calculatePointerPosition(clickPosition));
+}
+
+sf::Vector2f calculatePointerPosition(const sf::Vector2f& clickPosition)
+{
+    return {
+        clickPosition.x - POINTER_SPRITE_WIDTH / 2,
+        clickPosition.y - POINTER_SPRITE_HEIGHT / 2,
+    };
 }
