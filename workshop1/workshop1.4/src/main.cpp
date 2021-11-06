@@ -32,11 +32,11 @@ void initCat(sf::Sprite& cat);
 void initPointer(sf::Sprite& pointer);
 
 // Events handling
-void pollEvents(sf::RenderWindow& window, sf::Vector2f& clickPosition);
-void onMousePressed(const sf::Event::MouseButtonEvent& event, sf::Vector2f& clickPosition);
+void pollEvents(sf::RenderWindow& window, sf::Vector2f& clickPosition, bool& clicked);
+void onMousePressed(const sf::Event::MouseButtonEvent& event, sf::Vector2f& clickPosition, bool& clicked);
 
 // Rendering
-void redrawFrame(sf::RenderWindow& window, const sf::Sprite& cat, const sf::Sprite& pointer);
+void redrawFrame(sf::RenderWindow& window, const sf::Sprite& cat, const sf::Sprite& pointer, bool clicked);
 
 // Updating
 void update(sf::Sprite& cat, sf::Sprite& pointer, const sf::Vector2f& clickPosition);
@@ -58,14 +58,15 @@ int main()
     sf::Sprite pointer;
 
     sf::Vector2f clickPosition;
+    bool clicked = false;
 
     initCat(cat);
     initPointer(pointer);
     while (window.isOpen())
     {
-        pollEvents(window, clickPosition);
+        pollEvents(window, clickPosition, clicked);
         update(cat, pointer, clickPosition);
-        redrawFrame(window, cat, pointer);
+        redrawFrame(window, cat, pointer, clicked);
     }
 }
 
@@ -93,7 +94,7 @@ void initPointer(sf::Sprite& pointer)
     pointer.setTexture(texture);
 }
 
-void pollEvents(sf::RenderWindow& window, sf::Vector2f& clickPosition)
+void pollEvents(sf::RenderWindow& window, sf::Vector2f& clickPosition, bool& clicked)
 {
     sf::Event event{};
     while (window.pollEvent(event))
@@ -104,7 +105,7 @@ void pollEvents(sf::RenderWindow& window, sf::Vector2f& clickPosition)
             window.close();
             break;
         case sf::Event::MouseButtonPressed:
-            onMousePressed(event.mouseButton, clickPosition);
+            onMousePressed(event.mouseButton, clickPosition, clicked);
             break;
         default:
             break;
@@ -112,19 +113,27 @@ void pollEvents(sf::RenderWindow& window, sf::Vector2f& clickPosition)
     }
 }
 
-void onMousePressed(const sf::Event::MouseButtonEvent& event, sf::Vector2f& clickPosition)
+void onMousePressed(const sf::Event::MouseButtonEvent& event, sf::Vector2f& clickPosition, bool& clicked)
 {
     if (event.button == sf::Mouse::Left)
     {
         std::cout << "mouse x=" << event.x << ", y=" << event.y << std::endl;
+
         clickPosition = { float(event.x), float(event.y) };
+        if (!clicked)
+        {
+            clicked = true;
+        }
     }
 }
 
-void redrawFrame(sf::RenderWindow& window, const sf::Sprite& cat, const sf::Sprite& pointer)
+void redrawFrame(sf::RenderWindow& window, const sf::Sprite& cat, const sf::Sprite& pointer, bool clicked)
 {
     window.clear(WINDOW_BACKGROUND_COLOR);
-    window.draw(pointer);
+    if (clicked)
+    {
+        window.draw(pointer);
+    }
     window.draw(cat);
     window.display();
 }
