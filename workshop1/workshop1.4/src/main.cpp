@@ -21,13 +21,15 @@ constexpr uint CAT_INITIAL_Y = WINDOW_HEIGHT / 2 - CAT_SPRITE_HEIGHT;
 
 const std::string CAT_TEXTURE_PATH = "assets/cat.png";
 
-constexpr float CAT_MAX_SPEED = 250;
+constexpr float CAT_SPEED = 250;
 
 // Pointer
 constexpr uint POINTER_SPRITE_WIDTH = 32;
 constexpr uint POINTER_SPRITE_HEIGHT = 32;
 
 const std::string POINTER_TEXTURE_PATH = "assets/red_pointer.png";
+
+constexpr float POINTER_SPEED = 600;
 
 // === Function declarations ===
 
@@ -178,5 +180,5 @@ sf::Vector2f calculateCatPosition(const sf::Vector2f& currentPosition, const sf:
         return currentPosition;
     }
 
-    return currentPosition + CAT_MAX_SPEED * normalizedDirection * dt;
+    return currentPosition + CAT_SPEED * normalizedDirection * dt;
 }
