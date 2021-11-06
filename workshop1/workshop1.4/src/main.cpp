@@ -21,8 +21,8 @@ constexpr uint CAT_INITIAL_Y = WINDOW_HEIGHT / 2 - CAT_SPRITE_HEIGHT;
 const std::string CAT_TEXTURE_PATH = "assets/cat.png";
 
 // Pointer
-constexpr uint POINTER_SPRITE_WIDTH = 38;
-constexpr uint POINTER_SPRITE_HEIGHT = 35;
+constexpr uint POINTER_SPRITE_WIDTH = 32;
+constexpr uint POINTER_SPRITE_HEIGHT = 32;
 const std::string POINTER_TEXTURE_PATH = "assets/red_pointer.png";
 
 // === Function declarations ===
