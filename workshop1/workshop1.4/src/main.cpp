@@ -166,10 +166,7 @@ void update(sf::Sprite& cat, sf::Sprite& pointer, sf::Clock& clock, const sf::Ve
 
 sf::Vector2f calculatePointerPosition(const sf::Vector2f& clickPosition)
 {
-    return {
-        clickPosition.x - float(POINTER_SPRITE_WIDTH) / 2,
-        clickPosition.y - float(POINTER_SPRITE_HEIGHT) / 2,
-    };
+    return topLeftPosition(clickPosition, POINTER_SPRITE_WIDTH, POINTER_SPRITE_HEIGHT);
 }
 
 sf::Vector2f calculateCatPosition(const sf::Vector2f& currentPosition, const sf::Vector2f& direction, const float dt)

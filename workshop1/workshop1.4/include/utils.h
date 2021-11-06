@@ -7,7 +7,9 @@
 float norm(const sf::Vector2f& vec);
 sf::Vector2f normalized(const sf::Vector2f& vec);
 
+sf::Vector2f centerPosition(const sf::Vector2f& topLeftPosition, float width, float height);
+sf::Vector2f topLeftPosition(const sf::Vector2f& centerPosition, float width, float height);
 sf::Vector2f calculateMovementPosition(const sf::Vector2f& currentPosition,
     const sf::Vector2f& direction,
-    const float speed,
-    const float dt);
+    float speed,
+    float dt);
