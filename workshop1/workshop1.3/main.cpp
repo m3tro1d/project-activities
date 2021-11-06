@@ -73,6 +73,7 @@ void pollEvents(sf::RenderWindow& window)
         }
     }
 }
+
 void redrawFrame(sf::RenderWindow& window, const sf::Sprite& cat)
 {
     window.clear(WINDOW_BACKGROUND_COLOR);
