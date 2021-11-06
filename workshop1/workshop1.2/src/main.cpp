@@ -12,8 +12,6 @@ constexpr uint WINDOW_HEIGHT = 600;
 
 const sf::Color WINDOW_BACKGROUND_COLOR = sf::Color(0xFF, 0xFF, 0xFF);
 
-constexpr uint WINDOW_ANTIALIASING_LEVEL = 8;
-
 // Arrow
 constexpr uint ARROW_INITIAL_X = WINDOW_WIDTH / 2;
 constexpr uint ARROW_INITIAL_Y = WINDOW_HEIGHT / 2;
@@ -53,7 +51,7 @@ float calculateRotation(float currentRotation, const sf::Vector2<float>& directi
 int main()
 {
     sf::ContextSettings settings;
-    settings.antialiasingLevel = WINDOW_ANTIALIASING_LEVEL;
+    settings.antialiasingLevel = 8;
     sf::RenderWindow window(
         sf::VideoMode({ WINDOW_WIDTH, WINDOW_HEIGHT }),
         "Moving Arrow",
